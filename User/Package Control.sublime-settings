@@ -1,0 +1,31 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Anaconda",
+		"AutoDocstring",
+		"BracketHighlighter",
+		"ColorPicker",
+		"FontCycler",
+		"Git-StatusBar",
+		"GitGutter-Edge",
+		"HTML-CSS-JS Prettify",
+		"Markdown Preview",
+		"MarkdownEditing",
+		"Package Control",
+		"PackageResourceViewer",
+		"Pretty JSON",
+		"Python Create Package",
+		"SendTextPlus",
+		"SideBarEnhancements",
+		"SublimeLinter",
+		"SublimeLinter-pep8",
+		"SublimeLinter-pyflakes",
+		"Terminal",
+		"Theme - Aprosopo",
+		"Theme - Soda"
+	]
+}

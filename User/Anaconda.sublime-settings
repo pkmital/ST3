@@ -1,0 +1,12 @@
+{
+	"auto_formatting_timeout": 10,
+	"python_interpreter": "/Users/pkmital/.pyenv/shims/python3",
+	"pep257": true,
+    "aggressive": 0,
+	"anaconda_gutter_marks": false,
+    "anaconda_linting": false,
+    "autoformat_ignore":
+    [
+        "E501"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "cmd": ["python3", "-u", "$file"],
+    "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+    "selector": "source.python",
+    "env": {"PYTHONPATH":"/Users/pkmital/pkm/freelance/kadenze/science/libraries/python/kad:/usr/local/lib/python3.5/site-packages/"},
+    "path":"/usr/local/bin:/Applications/git-annex.app/Contents/MacOS:/Applications/git-annex.app/Contents/MacOS:/Users/pkmital/torch/install/bin:/usr/local/cuda/bin:/Applications/git-annex.app/Contents/MacOS:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin",
+}

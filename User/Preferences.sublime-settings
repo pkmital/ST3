@@ -1,0 +1,99 @@
+{
+	"always_show_minimap_viewport": true,
+	"aprosopo_active_bar": true,
+	"aprosopo_active_text": true,
+	"aprosopo_combined_dirty_active_bar": true,
+	"aprosopo_dark_dirty_red": true,
+	"aprosopo_dark_green": true,
+	"aprosopo_dirty_bar": true,
+	"aprosopo_dirty_button": true,
+	"aprosopo_show_tab_close_buttons": true,
+	"aprosopo_sidebar_tree_medium": true,
+	"aprosopo_statusbar_font_medium": true,
+	"bold_folder_labels": true,
+	"caret_style": "phase",
+	"color_scheme": "Packages/User/Oblivion - Soda Dark (SL) (SublimePythonIDE).tmTheme",
+	"draw_minimap_border": true,
+	"ensure_newline_at_eof_on_save": true,
+	"fade_fold_buttons": false,
+	"folder_exclude_patterns":
+	[
+		".svn",
+		".git",
+		".hg",
+		"CVS",
+		"__pycache__"
+	],
+	"font_face": "Meslo LG M",
+	"font_options": "subpixel_antialias",
+	"font_size": 12,
+	"fonts_list":
+	[
+		"Andale Mono",
+		"Bitstream Vera Sans",
+		"Consolas",
+		"Courier",
+		"Courier New",
+		"Envy Code R",
+		"Inconsolata",
+		"Lucida Console",
+		"Menlo",
+		"Meslo LG S",
+		"Meslo LG M",
+		"Meslo LG L",
+		"Monaco",
+		"ProFontX",
+		"Source Code Pro",
+		"Source Code Pro Light",
+		"Source Code Pro ExtraLight",
+		"Ubuntu Mono"
+	],
+	"highlight_line": true,
+	"highlight_modified_tabs": true,
+	"ignored_packages":
+	[
+		"GitGutter-Edge",
+		"Vintage"
+	],
+	"indent_guide_options":
+	[
+		"draw_active",
+		"draw_normal"
+	],
+	"index_exclude_patterns":
+	[
+		"*.log",
+		"__pycache__",
+		".git",
+		".svn",
+		"*.pkl",
+		"*.ckpt",
+		".DS_Store",
+		"*.tgz",
+		"*.tfmodel",
+		"*.ipynb",
+		"*.*~",
+		"*.dat",
+		"*.pyc",
+		"*.txt",
+		"*.md",
+		"*.json",
+		"*.xml",
+		"*.html"
+	],
+	"line_padding_bottom": 0,
+	"line_padding_top": 0,
+	"rulers":
+	[
+		79
+	],
+	"show_encoding": true,
+	"show_line_endings": true,
+	"soda_classic_tabs": true,
+	"soda_folder_icons": false,
+	"theme": "Aprosopo Dark@st3.sublime-theme",
+	"translateTabsToSpaces": true,
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"wrap_width": 80
+}
