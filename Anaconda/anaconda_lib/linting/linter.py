@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 import _ast  # noqa
 
-import pep8  # noqa
+import pycodestyle as pep8  # noqa
 import pyflakes.checker as pyflakes  # noqa
 
 
@@ -305,6 +305,7 @@ class Linter(object):
             elif (isinstance(
                 error, (
                     pyflakes.messages.RedefinedWhileUnused,
+                    pyflakes.messages.RedefinedInListComp,
                     pyflakes.messages.UndefinedName,
                     pyflakes.messages.UndefinedExport,
                     pyflakes.messages.UndefinedLocal,

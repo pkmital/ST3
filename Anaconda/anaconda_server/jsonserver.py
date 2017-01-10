@@ -22,12 +22,14 @@ try:
 except ImportError:
     import json
 
-sys.path.insert(
-    0, os.path.join(os.path.dirname(__file__), '../anaconda_lib/jedi'))
+sys.path.insert(0, os.path.join(
+    os.path.split(os.path.split(__file__)[0])[0], 'anaconda_lib'))
 
-import settings as jedi_settings
+from lib.path import log_directory
 from lib.contexts import json_decode
+from unix_socket import UnixSocketPath
 from handlers import ANACONDA_HANDLERS
+from jedi import settings as jedi_settings
 from lib.anaconda_handler import AnacondaHandler
 
 
@@ -51,6 +53,7 @@ class JSONHandler(asynchat.async_chat):
         """
 
         if data is not None:
+            print(data)
             data = '{0}\r\n'.format(json.dumps(data))
             data = bytes(data, 'utf8') if PY3 else data
 
@@ -78,6 +81,7 @@ class JSONHandler(asynchat.async_chat):
                 return
 
             if data['method'] == 'check':
+                logging.info('Check received')
                 self.return_back(message='Ok', uid=data['uid'])
                 return
 
@@ -92,7 +96,19 @@ class JSONHandler(asynchat.async_chat):
             uid = data.pop('uid')
             vid = data.pop('vid', None)
             handler_type = data.pop('handler')
-            self.handle_command(handler_type, method, uid, vid, data)
+            if DEBUG_MODE is True:
+                print('Received method: {0}, handler: {1}'.format(
+                    method, handler_type)
+                )
+            try:
+                self.handle_command(handler_type, method, uid, vid, data)
+            except Exception as error:
+                logging.error(error)
+                log_traceback()
+                self.return_back({
+                    'success': False, 'uid': uid,
+                    'vid': vid, 'error': str(error)
+                })
         else:
             logging.error(
                 'client sent somethinf that I don\'t understand: {0}'.format(
@@ -110,6 +126,8 @@ class JSONHandler(asynchat.async_chat):
 
         handler = ANACONDA_HANDLERS.get(
             handler_type, AnacondaHandler.get_handler(handler_type))
+        if DEBUG_MODE is True:
+            print('{0} handler retrieved from registry'.format(handler))
         handler(method, data, uid, vid, self.return_back, DEBUG_MODE).run()
 
 
@@ -119,7 +137,10 @@ class JSONServer(asyncore.dispatcher):
 
     allow_reuse_address = False
     request_queue_size = 5
-    address_familty = socket.AF_INET
+    if os.name == 'nt':
+        address_family = socket.AF_INET
+    else:
+        address_family = socket.AF_UNIX
     socket_type = socket.SOCK_STREAM
 
     def __init__(self, address, handler=JSONHandler):
@@ -127,7 +148,7 @@ class JSONServer(asyncore.dispatcher):
         self.handler = handler
 
         asyncore.dispatcher.__init__(self)
-        self.create_socket(self.address_familty, self.socket_type)
+        self.create_socket(self.address_family, self.socket_type)
         self.last_call = time.time()
 
         self.bind(self.address)
@@ -149,7 +170,9 @@ class JSONServer(asyncore.dispatcher):
         """Called when we accept and incomming connection
         """
         sock, addr = self.accept()
-        self.logger.info('Incomming connection from {0}'.format(repr(addr)))
+        self.logger.info('Incomming connection from {0}'.format(
+            repr(addr) or 'unix socket')
+        )
         self.handler(sock, self)
 
     def handle_close(self):
@@ -237,6 +260,9 @@ def get_logger(path):
     """Build file logger
     """
 
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     log = logging.getLogger('')
     log.setLevel(logging.DEBUG)
     hdlr = handlers.RotatingFileHandler(
@@ -255,23 +281,17 @@ def log_traceback():
     """Just log the traceback
     """
 
-    logging.error(get_log_traceback())
+    logging.error(traceback.format_exc())
 
-
-def get_log_traceback():
-    """Get the traceback log msg
-    """
-
-    error = []
-    for traceback_line in traceback.format_exc().splitlines():
-        error.append(traceback_line)
-
-    return '\n'.join(error)
 
 if __name__ == "__main__":
+
+    WINDOWS = os.name == 'nt'
     opt_parser = OptionParser(usage=(
         'usage: %prog -p <project> -e <extra_paths> port'
-    ))
+    )) if WINDOWS else OptionParser(usage=(
+        "usage: %prog -p <project> -e <extra_paths> ST3_PID")
+    )
 
     opt_parser.add_option(
         '-p', '--project', action='store', dest='project', help='project name'
@@ -283,15 +303,24 @@ if __name__ == "__main__":
     )
 
     options, args = opt_parser.parse_args()
-    if len(args) != 2:
-        opt_parser.error('you have to pass a port number and PID')
+    port, PID = None, None
+    if WINDOWS:
+        if len(args) != 2:
+            opt_parser.error('you have to pass a port number and PID')
 
-    port = int(args[0])
-    PID = args[1]
+        port = int(args[0])
+        PID = args[1]
+    else:
+        if len(args) != 1:
+            opt_parser.error('you have to pass a Sublime Text 3 PID')
+
+        PID = args[0]
+
     if options.project is not None:
         jedi_settings.cache_directory = os.path.join(
             jedi_settings.cache_directory, options.project
         )
+        log_directory = os.path.join(log_directory, options.project)
 
     if not os.path.exists(jedi_settings.cache_directory):
         os.makedirs(jedi_settings.cache_directory)
@@ -301,14 +330,24 @@ if __name__ == "__main__":
             if path not in sys.path:
                 sys.path.insert(0, path)
 
-    logger = get_logger(jedi_settings.cache_directory)
+    logger = get_logger(log_directory)
 
     try:
-        server = JSONServer(('localhost', port))
+        if WINDOWS:
+            server = JSONServer(('localhost', port))
+        else:
+            unix_socket_path = UnixSocketPath(options.project)
+            if not os.path.exists(os.path.dirname(unix_socket_path.socket)):
+                os.makedirs(os.path.dirname(unix_socket_path.socket))
+            if os.path.exists(unix_socket_path.socket):
+                os.unlink(unix_socket_path.socket)
+            server = JSONServer(unix_socket_path.socket)
+
         logger.info(
-            'Anaconda Server started in port {0} for '
+            'Anaconda Server started in {0} for '
             'PID {1} with cache dir {2}{3}'.format(
-                port, PID, jedi_settings.cache_directory,
+                port or unix_socket_path.socket, PID,
+                jedi_settings.cache_directory,
                 ' and extra paths {0}'.format(
                     options.extra_paths
                 ) if options.extra_paths is not None else ''
@@ -316,7 +355,8 @@ if __name__ == "__main__":
         )
     except Exception as error:
         log_traceback()
-        logger.error(error)
+        logger.error(str(error))
+        server.shutdown()
         sys.exit(-1)
 
     server.logger = logger

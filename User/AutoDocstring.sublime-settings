@@ -11,8 +11,8 @@
   "sort_class_attributes": true,
   "sort_exceptions": true,
   "sort_module_attributes": true,
-  "style": "numpy",
   "template_order": false,
   "use_snippet": true,
-  "start_with_newline": ""
+  "start_with_newline": "",
+  "style": "numpy"
 }

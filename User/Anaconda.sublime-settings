@@ -1,12 +1,21 @@
 {
-	"auto_formatting_timeout": 10,
+	// "auto_formatting_timeout": 10,
 	"python_interpreter": "/Users/pkmital/.pyenv/shims/python3",
-	"pep257": true,
-    "aggressive": 0,
-	"anaconda_gutter_marks": false,
-    "anaconda_linting": false,
-    "autoformat_ignore":
-    [
-        "E501"
-    ]
+	// "pep257": true,
+    // "aggressive": 0,
+    "pep8_max_line_length": 100,
+	// "anaconda_gutter_marks": false,
+    // "anaconda_linting": true,
+    // "anaconda_linting_behaviour": "load-save",
+    // "anaconda_linter_show_errors_on_save": false,
+    // "autoformat_ignore":
+    // [
+    //     "E501"
+    // ]
+    // "auto_complete_triggers": [
+    //     {
+    //         "selector": "source.python - string - comment - constant.numeric", 
+    //         "characters": "."
+    //     }
+    // ]
 }

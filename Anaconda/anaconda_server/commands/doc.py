@@ -2,9 +2,25 @@
 # Copyright (C) 2013 - Oscar Campos <oscar.campos@member.fsf.org>
 # This program is Free Software see LICENSE file for details
 
+import sys
 import logging
 
 from .base import Command
+
+# We are forced to use this not Pythonic import approach as the incomplete
+# module `future.moves.html` distributed by https://github.com/PythonCharmers
+# breaks the doc.py logic if it is present in the user sysrem as it contains
+# just the `escape` method but not the `unescape` one so even if it get
+# imported, this command just crashes and forces a JsonServer new instance
+if sys.version_info >= (3, 0):
+    import html
+    if sys .version_info < (3, 4):
+        import html as cgi
+        from html.parser import HTMLParser
+else:
+    # python2 uses cgi
+    import cgi
+    from HTMLParser import HTMLParser
 
 
 class Doc(Command):
@@ -25,6 +41,7 @@ class Doc(Command):
             definitions = self.script.goto_definitions()
         except Exception as error:
             logging.debug(error)
+            logging.debug(self.script)
             definitions = []
 
         if not definitions:
@@ -43,7 +60,8 @@ class Doc(Command):
 
         self.callback({
             'success': success,
-            'doc': ('<br><br>' if self.html else '\n'+'-'*79+'\n').join(docs),
+            'doc': ('<br><br>' if self.html
+                    else '\n' + '-' * 79 + '\n').join(docs),
             'uid': self.uid
         })
 
@@ -59,5 +77,22 @@ class Doc(Command):
         """Generate documentation string in HTML format
         """
 
-        return '{0}\n{1}'.format(
-            definition.full_name, definition.doc.replace('\n', '<br>'))
+        if sys.version_info >= (3, 4):
+            escaped_doc = html.escape(
+                html.unescape(definition.doc), quote=False)
+        else:
+            try:
+                escaped_doc = cgi.escape(
+                    HTMLParser.unescape.__func__(
+                        HTMLParser, definition.doc.encode('utf8')
+                    )
+                )
+            except AttributeError:
+                # Python 3.x < 3.4
+                escaped_doc = cgi.escape(
+                    HTMLParser.unescape(HTMLParser, definition.doc)
+                )
+
+        escaped_doc = escaped_doc.replace('\n', '<br>')
+
+        return '{0}\n{1}'.format(definition.full_name, escaped_doc)

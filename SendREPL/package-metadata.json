@@ -1,0 +1,1 @@
+{"dependencies": [], "description": "Send Text to Terminal, ITerm, ConEmu, Cmder, Tmux; R (RStudio), Julia, IPython REPL", "version": "0.1.12", "platforms": ["*"], "url": "https://github.com/randy3k/SendREPL", "sublime_text": ">=3000"}

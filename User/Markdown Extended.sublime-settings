@@ -1,0 +1,7 @@
+// These settings override both User and Default settings for the Markdown Extended syntax
+{
+   "draw_centered": true, 
+   "line_padding_bottom": 2,
+   "line_padding_top": 2,
+   "line_numbers": false
+}

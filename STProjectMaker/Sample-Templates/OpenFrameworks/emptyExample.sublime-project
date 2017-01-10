@@ -1,0 +1,44 @@
+{  
+    "folders":  
+    [  
+        {  
+            "path": "."  
+        }  
+    ],  
+    "settings":  
+    {  
+        "add_language_option": true,  
+        "additional_language_options":  
+        {  
+            "c":  
+            [  
+            ],  
+            "c++":  
+            [  
+            ],  
+            "objc":  
+            [  
+            ],  
+            "objc++":  
+            [  
+            ]  
+        },  
+        "sublimeclang_enable_fast_completions": true,  
+        "sublimeclang_options":  
+        [  
+            "-stdlib=libc++",  
+            "-Isystem",
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/",
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1/", 
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1/ext",
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1/tr1",
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1/debug",
+            "-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/4.2.1/backward",
+            "-I/Users/pkmital/pkm/dev/of_v0.9.8_osx_release/addons/**",  
+            "-I/Users/pkmital/pkm/dev/of_v0.9.8_osx_release/libs/**",  
+            "-I./src/**"  
+        ],  
+        "sublimegdb_workingdir": "${project_path}/bin",  
+        "sublimegdb_commandline": "gdb --interpreter=mi ${project_name}_debug"  
+    }  
+} 

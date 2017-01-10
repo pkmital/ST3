@@ -10,6 +10,7 @@ import sublime_plugin
 
 from ..anaconda_lib.worker import Worker
 from ..anaconda_lib.tooltips import Tooltip
+from ..anaconda_lib.typing import Dict, Tuple, Any
 from ..anaconda_lib.helpers import prepare_send_data, is_python, get_settings
 
 
@@ -17,14 +18,14 @@ class AnacondaSignaturesEventListener(sublime_plugin.EventListener):
     """Signatures on status bar event listener class
     """
 
-    doc = None
+    doc = None  # type: str
     signature = None
     exclude = (
-        'None', 'str', 'int', 'float', 'True',
+        'None', 'NoneType', 'str', 'int', 'float', 'True',
         'False', 'in', 'or', 'and', 'bool'
     )
 
-    def on_modified(self, view):
+    def on_modified(self, view: sublime.View) -> None:
         """Called after changes has been made to a view
         """
 
@@ -40,52 +41,69 @@ class AnacondaSignaturesEventListener(sublime_plugin.EventListener):
                 location = (location[0], location[1] - 1)
 
             data = prepare_send_data(location, 'doc', 'jedi')
-            if int(sublime.version()) >= 3070:
-                data['html'] = get_settings(
-                    view, 'enable_signatures_tooltip', False)
-            Worker().execute(partial(self.prepare_data, view), **data)
+            use_tooltips = get_settings(
+                view, 'enable_signatures_tooltip', True
+            )
+            st_version = int(sublime.version())
+            if st_version >= 3070:
+                data['html'] = use_tooltips
+
+            currying = partial(self.prepare_data_status, view)
+            if use_tooltips and st_version >= 3070:
+                currying = partial(self.prepare_data_tooltip, view)
+            Worker().execute(currying, **data)
         except Exception as error:
             logging.error(error)
 
-    def prepare_data(self, view, data):
-        """Prepare the returned data
+    def prepare_data_tooltip(
+            self, view: sublime.View, data: Dict[str, Any]) -> Any:
+        """Prepare the returned data for tooltips
         """
 
-        st_version = int(sublime.version())
-        show_tooltip = get_settings(view, 'enable_signatures_tooltip', True)
-        show_doc = get_settings(view, 'merge_signatures_and_doc', True)
-        if (data['success'] and 'No docstring'
-                not in data['doc'] and data['doc'] != 'list\n'):
+        merge_doc = get_settings(view, 'merge_signatures_and_doc')
+        if (data['success'] and 'No docstring' not
+                in data['doc'] and data['doc'] != 'list\n'):
             try:
                 i = data['doc'].split('<br>').index("")
             except ValueError:
                 self.signature = data['doc']
-                if show_tooltip and show_doc and st_version >= 3070:
+                self.doc = ''
+                if self._signature_excluded(self.signature):
+                    return
+                return self._show_popup(view)
+
+            if merge_doc:
+                self.doc = '<br>'.join(data['doc'].split('<br>')[i:]).replace(
+                    "  ", "&nbsp;&nbsp;")
+
+            self.signature = '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.join(
+                data['doc'].split('<br>')[0:i])
+            if self.signature is not None and self.signature != "":
+                if not self._signature_excluded(self.signature):
                     return self._show_popup(view)
-                return self._show_status(view)
 
-            if show_tooltip and show_doc and st_version >= 3070:
-                self.doc = '<br>'.join(data['doc'].split('<br>')[i:])
-
-            if not show_tooltip or st_version < 3070:
-                self.signature = data['doc'].splitlines()[2]
-            else:
-                self.signature = '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.join(
-                    data['doc'].split('<br>')[0:i])
-            if ('(' in self.signature and
-                    self.signature.split('(')[0].strip() not in self.exclude):
-                if self.signature is not None and self.signature != '':
-                    if show_tooltip:
-                        return self._show_popup(view)
-
-                    return self._show_status(view)
-
-        if st_version >= 3070:
-            if view.is_popup_visible():
+        if view.is_popup_visible():
                 view.hide_popup()
         view.erase_status('anaconda_doc')
 
-    def _show_popup(self, view):
+    def prepare_data_status(
+            self, view: sublime.View, data: Dict[str, Any]) -> Any:
+        """Prepare the returned data for status
+        """
+
+        if (data['success'] and 'No docstring' not
+                in data['doc'] and data['doc'] != 'list\n'):
+            self.signature = data['doc']
+            if self._signature_excluded(self.signature):
+                return
+            try:
+                self.signature = self.signature.splitlines()[2]
+            except KeyError:
+                return
+
+            return self._show_status(view)
+
+    def _show_popup(self, view: sublime.View) -> None:
         """Show message in a popup if sublime text version is >= 3070
         """
 
@@ -100,10 +118,20 @@ class AnacondaSignaturesEventListener(sublime_plugin.EventListener):
         Tooltip(css).show_tooltip(
             view, display_tooltip, content, partial(self._show_status, view))
 
-    def _show_status(self, view):
+    def _show_status(self, view: sublime.View) -> None:
         """Show message in the view status bar
         """
 
         view.set_status(
             'anaconda_doc', 'Anaconda: {}'.format(self.signature)
         )
+
+    def _signature_excluded(self, signature: str) -> Tuple[str]:
+        """Whether to supress displaying information for the given signature.
+        """
+
+        # Check for the empty string first so the indexing in the next tests
+        # can't hit an exception, and we don't want to show an empty signature.
+        return ((signature == "") or
+                (signature.split('(', 1)[0].strip() in self.exclude) or
+                (signature.lstrip().split(None, 1)[0] in self.exclude))

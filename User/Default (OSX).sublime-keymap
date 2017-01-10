@@ -1,4 +1,19 @@
 [
     { "keys": ["ctrl+enter"], "command": "ipython_exec" },
-    { "keys": ["f5"], "command": "ipython_exec_file" }
+    { "keys": ["f5"], "command": "ipython_exec_file" },
+    { "keys": ["super+alt+down"], "command": "goto_definition" },
+    { "keys": ["super+option+a"], "command": "clang_format",
+        "context":
+        [
+            {"key": "selector", "operator": "equal", "operand": "source.objective-c++"}
+        ]
+    },
+    {
+        "keys": ["j", "j"],
+        "command": "_enter_normal_mode",
+        "args": {
+            "mode": "mode_insert"
+        },
+        "context": [{"key": "vi_insert_mode_aware"}]
+    }
 ]

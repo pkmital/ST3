@@ -1,0 +1,1 @@
+{"description": "SublimeLinter that finds globals in lua files.", "dependencies": [], "sublime_text": ">=3000", "version": "1.0.2", "url": "https://github.com/Sinaloit/SublimeLinter-contrib-lua-globals", "platforms": ["*"]}

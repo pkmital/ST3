@@ -1,0 +1,10 @@
+{
+	"dictionary": "Packages/Language - English/en_US.dic",
+	"draw_centered": true,
+	"extensions":
+	[
+		"md",
+		"mdown"
+	],
+	"spell_check": true
+}

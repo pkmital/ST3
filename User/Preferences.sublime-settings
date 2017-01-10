@@ -1,4 +1,19 @@
 {
+	"added_words":
+	[
+		"Convolutional",
+		"Tensorflow",
+		"preprocess",
+		"autoencoders",
+		"autoencoder",
+		"convolutional",
+		"timestep",
+		"filterbanks",
+		"filterbank",
+		"online",
+		"Wikipedia",
+		"softmax"
+	],
 	"always_show_minimap_viewport": true,
 	"aprosopo_active_bar": true,
 	"aprosopo_active_text": true,
@@ -6,26 +21,91 @@
 	"aprosopo_dark_dirty_red": true,
 	"aprosopo_dark_green": true,
 	"aprosopo_dirty_bar": true,
-	"aprosopo_dirty_button": true,
 	"aprosopo_show_tab_close_buttons": true,
-	"aprosopo_sidebar_tree_medium": true,
-	"aprosopo_statusbar_font_medium": true,
+	"aprosopo_statusbar_font_small": true,
+	"binary_file_patterns":
+	[
+		"*.ckpt",
+		"*.dds",
+		"*.eot",
+		"*.gif",
+		"*.gz",
+		"*.ico",
+		"*.jar",
+		"*.jpeg",
+		"*.jpg",
+		"*.meta",
+		"*.mp3",
+		"*.mp4",
+		"*.pdf",
+		"*.png",
+		"*.swf",
+		"*.tga",
+		"*.ttf",
+		"*.zip",
+		"*.pkl",
+		"*.tif",
+		"*.tfmodel",
+		"*.ckpt",
+		"*.protobuf",
+		"/Users/pkmital/pkm/dev/pkm/tensorflow_models/kadenze/cadl/session-5/img_align_celeba/**",
+		"/Users/pkmital/pkm/dev/pkm/tensorflow_models/kadenze/cadl/session-5/imgs/**",
+		"/Users/pkmital/pkm/dev/pkm/tensorflow_models/kadenze/cadl/session-5/logs/**",
+		"/Users/pkmital/pkm/dev/pkm/tensorflow_models/kadenze/cadl/session-5/vaegan/**",
+		"/Users/pkmital/pkm/dev/pkm/tensorflow_models/kadenze/cadl/session-5/vaegan_imgs/**"
+	],
 	"bold_folder_labels": true,
 	"caret_style": "phase",
-	"color_scheme": "Packages/User/Oblivion - Soda Dark (SL) (SublimePythonIDE).tmTheme",
+	"color_scheme": "Packages/User/pkm.tmTheme",
 	"draw_minimap_border": true,
 	"ensure_newline_at_eof_on_save": true,
 	"fade_fold_buttons": false,
+	"file_exclude_patterns":
+	[
+		"*.jpg",
+		"*.gif",
+		"*.tgz",
+		"*.gz",
+		"*.zip",
+		"*.pb",
+		"*.indb",
+		"*.tfmodel",
+		"*.png",
+		"*.pyc",
+		"*.pyo",
+		"*.exe",
+		"*.dll",
+		"*.obj",
+		"*.o",
+		"*.a",
+		"*.lib",
+		"*.so",
+		"*.dylib",
+		"*.ncb",
+		"*.sdf",
+		"*.suo",
+		"*.pdb",
+		"*.idb",
+		".DS_Store",
+		"*.class",
+		"*.psd",
+		"*.db",
+		"*.sublime-workspace"
+	],
 	"folder_exclude_patterns":
 	[
+		".vscode",
+		".ipynb_checkpoints",
 		".svn",
 		".git",
 		".hg",
 		"CVS",
 		"__pycache__"
 	],
-	"font_face": "Meslo LG M",
-	"font_options": "subpixel_antialias",
+	"font_face": "Source Code Pro",
+	"font_options":
+	[
+	],
 	"font_size": 12,
 	"fonts_list":
 	[
@@ -53,7 +133,13 @@
 	"ignored_packages":
 	[
 		"GitGutter-Edge",
+		"Markdown",
+		"MarkdownLight",
 		"Vintage"
+	],
+	"ignored_words":
+	[
+		"Connectionist"
 	],
 	"indent_guide_options":
 	[
@@ -71,16 +157,15 @@
 		".DS_Store",
 		"*.tgz",
 		"*.tfmodel",
-		"*.ipynb",
 		"*.*~",
 		"*.dat",
 		"*.pyc",
-		"*.txt",
-		"*.md",
-		"*.json",
-		"*.xml",
-		"*.html"
+		"*.png",
+		"*.jpeg",
+		"*.jpg",
+		"*.gif"
 	],
+	"index_files": true,
 	"line_padding_bottom": 0,
 	"line_padding_top": 0,
 	"rulers":
@@ -94,6 +179,7 @@
 	"theme": "Aprosopo Dark@st3.sublime-theme",
 	"translateTabsToSpaces": true,
 	"translate_tabs_to_spaces": true,
-	"trim_trailing_white_space_on_save": true,
+	"trim_trailing_white_space_on_save": false,
+	"use_simple_full_screen": true,
 	"wrap_width": 80
 }
